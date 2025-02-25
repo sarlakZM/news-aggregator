@@ -1,6 +1,6 @@
-import { APP_TITLE } from "./constants";
+import { APP_TITLE } from './constants'
 
-const appBranding= {
+const appBranding = {
   logoSrc: '',
   logoAlt: APP_TITLE,
   title: APP_TITLE,

@@ -1,15 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { fetchAndCombineArticles } from '../services/news.service'
-import { ApiResponse, NewsRequestParams } from '../types/api.type'
+import { ApiResponse } from '../types/api.type'
+import { ArticlesState } from '../types/state.type'
 
-interface ArticlesState {
-  articles: ApiResponse,
-  total: number,
-  loading: boolean,
-  status: 'idle' | 'loading' | 'succeeded' | 'failed',
-  error: string | null,
-  filters: NewsRequestParams,
-}
 
 const initialState: ArticlesState = {
   articles: [],
@@ -79,7 +72,9 @@ const articlesSlice = createSlice({
       return {
         ...state,
         articles: [
-          ...state.articles.filter((article) => article.author?.includes(action.payload.value)),
+          ...state.articles.filter((article) =>
+            article.author?.includes(action.payload.value)
+          ),
         ],
       }
     }),

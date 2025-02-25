@@ -1,18 +1,4 @@
 import { ApiResponseTypeMap, NewsRequestParams } from '../types/api.type'
-import {
-  bbcApiAuthors,
-  bbcApiCategories,
-  bbcApiSorces,
-  guardianApiAuthors,
-  guardianApiCategories,
-  guardianApiSources,
-  newsApiAuthors,
-  newsApiCategories,
-  newsApiSources,
-  nytApiAuthors,
-  nytApiCategories,
-  nytApiSources,
-} from './data'
 import { ApiTypesEnum } from './enums'
 import { PAGE_SIZE } from './constants'
 
@@ -67,10 +53,10 @@ const matchQueryParams: any = {
       sortBy: 'publishedAt',
       pageSize: PAGE_SIZE,
     }
-    params?.searchKeyword && (queryParams.q ??= params.searchKeyword);
-    params?.category && (queryParams.category ??= params.category);
-    params?.source && (queryParams.source ??= params.source) ;
-    params?.fromDate && (queryParams.from  ??= params.fromDate) //(e.g. 2025-02-21 or 2025-02-21T15:25:12)
+    params?.searchKeyword && (queryParams.q ??= params.searchKeyword)
+    params?.category && (queryParams.category ??= params.category)
+    params?.source && (queryParams.source ??= params.source)
+    params?.fromDate && (queryParams.from ??= params.fromDate) //(e.g. 2025-02-21 or 2025-02-21T15:25:12)
     return queryParams
   },
   bbc: (params: NewsRequestParams, apiKey: string) => {
@@ -81,10 +67,10 @@ const matchQueryParams: any = {
       pageSize: PAGE_SIZE,
       sources: 'bbc-news',
     }
-    params?.searchKeyword && (queryParams.q ??= params.searchKeyword);
+    params?.searchKeyword && (queryParams.q ??= params.searchKeyword)
     // params?.category && (queryParams.category ??= params.category);
-    params?.source && (queryParams.source ??= params.source) ;
-    params?.fromDate && (queryParams.from  ??= params.fromDate) //(e.g. 2025-02-21 or 2025-02-21T15:25:12)
+    params?.source && (queryParams.source ??= params.source)
+    params?.fromDate && (queryParams.from ??= params.fromDate) //(e.g. 2025-02-21 or 2025-02-21T15:25:12)
     return queryParams
   },
   nytimes: (params: NewsRequestParams, apiKey: string) => {
@@ -93,10 +79,12 @@ const matchQueryParams: any = {
       sort: 'newest',
       page: 0,
     }
-    params?.searchKeyword && (queryParams.q ??= params.searchKeyword);
-    params?.category && (queryParams.fq = `news_desk:(\"${params.category}\") OR sectin_name(\"${params.category}\")`);
-    params?.source && (queryParams.fq ??= params.source) ;
-    params?.fromDate && (queryParams.begin_date  ??= params.fromDate.replace(/-/g, ''))  //(e.g. 20230101 jan 1 2023 20231231)
+    params?.searchKeyword && (queryParams.q ??= params.searchKeyword)
+    params?.category &&
+      (queryParams.fq = `news_desk:(\"${params.category}\") OR sectin_name(\"${params.category}\")`)
+    params?.source && (queryParams.fq ??= params.source)
+    params?.fromDate &&
+      (queryParams.begin_date ??= params.fromDate.replace(/-/g, '')) //(e.g. 20230101 jan 1 2023 20231231)
     return queryParams
   },
   guardian: (params: NewsRequestParams, apiKey: string) => {
@@ -106,9 +94,9 @@ const matchQueryParams: any = {
       'show-elements': 'image',
       'page-size': PAGE_SIZE,
     }
-    params?.searchKeyword && (queryParams.q ??= params.searchKeyword);
-    params?.category && (queryParams.section ??= params.category.toLowerCase());
-    params?.fromDate && (queryParams['from-date'] ??= params.fromDate);//(e.g. 2025-02-21)
+    params?.searchKeyword && (queryParams.q ??= params.searchKeyword)
+    params?.category && (queryParams.section ??= params.category.toLowerCase())
+    params?.fromDate && (queryParams['from-date'] ??= params.fromDate) //(e.g. 2025-02-21)
     return queryParams
   },
 }
@@ -125,28 +113,3 @@ export const matchUrlWithQueryParams = (
   const url = `${apiConfig.url.replace(/\/$/g, '')}?${new URLSearchParams(queryParams).toString()}`
   return url
 }
-
-export const categories = [
-  ...new Set([
-    ...guardianApiCategories,
-    ...newsApiCategories,
-    ...nytApiCategories,
-    ...bbcApiCategories,
-  ]),
-]
-export const authors = [
-  ...new Set([
-    ...guardianApiAuthors,
-    ...newsApiAuthors,
-    ...bbcApiAuthors,
-    ...nytApiAuthors,
-  ]),
-]
-export const sources = [
-  ...new Set([
-    ...newsApiSources,
-    ...guardianApiSources,
-    ...nytApiSources,
-    ...bbcApiSorces,
-  ]),
-]

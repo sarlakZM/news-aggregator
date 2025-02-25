@@ -1,11 +1,11 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled'
 
-const StyledDiv = styled("div")`
+const StyledDiv = styled('div')`
   margin-top: 18px;
   display: flex;
   justify-content: center;
   width: 100%;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 1.334;
@@ -21,6 +21,6 @@ const StyledDiv = styled("div")`
     position: absolute;
     left: 40px;
   }
-`;
+`
 
-export default StyledDiv;
+export default StyledDiv

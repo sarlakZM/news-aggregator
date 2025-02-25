@@ -21,7 +21,8 @@ const PersonalizedFeedsNavigation = ({
   }
   sources &&
     sources.length > 0 &&
-    (allNavigation['sources'] = CustomNavigation({
+    (
+      allNavigation['sources'] = CustomNavigation({
       mainNavigation: mainNavigation,
       items: sources,
       head: 'Sources',

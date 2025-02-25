@@ -38,18 +38,22 @@ const fetchAndCombineArticles = async (
   newsRequestParams: NewsRequestParams
 ) => {
   try {
-    const apis =  Object.values(ApiTypesEnum)
-    const responses = await Promise.allSettled(apis.map( api => fetchNewsAGeneric(newsRequestParams, api)));
-    const isAllApisHasError = responses.every( api => api.status == 'rejected');
-    if( isAllApisHasError )
-      throw 'Error fetching news articles';
-    const combinedArticles =  responses.reduce( (combined: any, response) =>  {
-      return response.status === 'fulfilled' && (combined = [...combined, ...response.value]) 
+    const apis = Object.values(ApiTypesEnum)
+    const responses = await Promise.allSettled(
+      apis.map((api) => fetchNewsAGeneric(newsRequestParams, api))
+    )
+    const isAllApisHasError = responses.every((api) => api.status == 'rejected')
+    if (isAllApisHasError) throw 'Error fetching news articles'
+    const combinedArticles = responses.reduce((combined: any, response) => {
+      return (
+        response.status === 'fulfilled' &&
+        (combined = [...combined, ...response.value])
+      )
     }, [])
 
     return combinedArticles
   } catch (error) {
-    throw `Error fetching news articles ${error}`;
+    throw `Error fetching news articles ${error}`
   }
 }
 

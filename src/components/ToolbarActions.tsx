@@ -19,7 +19,13 @@ const ToolbarActions = () => {
   }, [dispatch, filters])
 
   return (
-    <Stack direction="row" maxWidth="sm">
+    <Stack
+      direction="row"
+      maxWidth="sm"
+      sx={{
+        marginBottom: '10px',
+      }}
+    >
       <ToolbarActionsSearch />
       <CustomPopover
         buttonProps={{ title: 'More Filter', icon: <ManageSearchIcon /> }}

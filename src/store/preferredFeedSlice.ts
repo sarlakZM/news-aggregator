@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { preferredFeedState } from '../types/state.type'
 
-interface preferredFeedState {
-  sources: Array<string>
-  categories: Array<string>
-  authors: Array<string>
-}
 
 const initialState: preferredFeedState = {
   sources: [],

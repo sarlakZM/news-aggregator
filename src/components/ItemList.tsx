@@ -17,4 +17,4 @@ const ItemList: React.FC<any> = memo(() => {
   )
 })
 
-export default ItemList;
+export default ItemList

@@ -10,7 +10,7 @@ import {
 } from '../store/preferredFeedSlice'
 import { AppDispatch } from '../store/store'
 
-import { authors, categories, sources } from '../utils/service.utils'
+import { authors, categories, sources } from '../utils/feeds.utils'
 
 const PreferredFields = () => {
   const dispatch = useDispatch<AppDispatch>()

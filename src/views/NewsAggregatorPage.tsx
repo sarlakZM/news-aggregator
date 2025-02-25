@@ -12,7 +12,12 @@ import AddFeedButton from '../components/AddFeedButton'
 import PersonalizedFeeds from '../components/PersonalizedFeedsNavigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { memoizedSelectPreferred } from '../store/newsSelects'
-import { changeFiltersCategory, changeFiltersSource, fetchArticlesAsync, filterArticlesByPreferredFeed } from '../store/newsSlice'
+import {
+  changeFiltersCategory,
+  changeFiltersSource,
+  fetchArticlesAsync,
+  filterArticlesByPreferredFeed,
+} from '../store/newsSlice'
 import { AppDispatch } from '../store/store'
 import { appBranding } from '../utils/app.config'
 
@@ -38,38 +43,43 @@ const NAVIGATION: Navigation = [
 ]
 
 export default function AppProviderLayout() {
-  const [preferredFeed, setPreferredFeed] = useState({ head: '', value: '' });
+  const [preferredFeed, setPreferredFeed] = useState({ head: '', value: '' })
   const dispatch = useDispatch<AppDispatch>()
   const router = useDemoRouter('/dashboard')
   const { sources, categories, authors } = useSelector(memoizedSelectPreferred)
-  const mainNavigation = [...NAVIGATION];
-  
+  const mainNavigation = [...NAVIGATION]
+
   const handleClick = (head: string, value: string) => {
     switch (head) {
       case 'Sources':
-          dispatch(changeFiltersSource({ source: value }));
-          dispatch(fetchArticlesAsync(''));
-          break;
+        dispatch(changeFiltersSource({ source: value }))
+        dispatch(fetchArticlesAsync(''))
+        break
       case 'Categories':
-          dispatch(changeFiltersCategory({ category: value }));
-          dispatch(fetchArticlesAsync(''));
-          break;
+        dispatch(changeFiltersCategory({ category: value }))
+        dispatch(fetchArticlesAsync(''))
+        break
       case 'Authors':
-           setPreferredFeed({ head, value });
-          break;
+        setPreferredFeed({ head, value })
+        break
       default:
-          break;
+        break
     }
-  };
+  }
 
   useEffect(() => {
-      if (preferredFeed.head === 'Authors') {
-          const timer = setTimeout(() => {
-              dispatch(filterArticlesByPreferredFeed({ typeFilterPreferred: preferredFeed.head, value: preferredFeed.value }));
-          }, 500);
-          return () => clearTimeout(timer);
-      }
-  }, [preferredFeed]);
+    if (preferredFeed.head === 'Authors') {
+      const timer = setTimeout(() => {
+        dispatch(
+          filterArticlesByPreferredFeed({
+            typeFilterPreferred: preferredFeed.head,
+            value: preferredFeed.value,
+          })
+        )
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [preferredFeed])
 
   let navigation = PersonalizedFeeds({
     mainNavigation,

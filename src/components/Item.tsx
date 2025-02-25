@@ -6,7 +6,6 @@ import CardMedia from '@mui/material/CardMedia'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Skeleton from '@mui/material/Skeleton'
-
 import { Article } from '../types/api.type'
 
 export const Item: React.FC<any> = React.memo(({ item }: { item: Article }) => {
@@ -16,16 +15,13 @@ export const Item: React.FC<any> = React.memo(({ item }: { item: Article }) => {
       <CardHeader
         avatar={
           title ? (
-            <Avatar
-              alt={title.slice(5)}
-              src={'assets/news/news.png'}
-            />
+            <Avatar alt={title.slice(5)} src={'./news.png'} />
           ) : (
             <Skeleton
               animation="wave"
               variant="circular"
-              width={40}
-              height={40}
+              width={30}
+              height={30}
             />
           )
         }
@@ -58,7 +54,7 @@ export const Item: React.FC<any> = React.memo(({ item }: { item: Article }) => {
           loading="lazy"
         />
       ) : (
-        <Skeleton sx={{ height: 190 }} animation="wave" variant="rectangular" />
+        <Skeleton sx={{ height: 150 }} animation="wave" variant="rectangular" />
       )}
       <CardContent>
         {description ? (

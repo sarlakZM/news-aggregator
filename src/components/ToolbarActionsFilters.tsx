@@ -1,12 +1,13 @@
+import { useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
-import { useMemo } from 'react'
+import Autocomplete from '@mui/material/Autocomplete'
+
 import { changeFiltersCategory, changeFiltersSource } from '../store/newsSlice'
 import { AppDispatch } from '../store/store'
-import { useDispatch, useSelector } from 'react-redux'
-import { sources, categories } from '../utils/service.utils'
+import { sources, categories } from '../utils/feeds.utils'
 import { ApiTypesEnum } from '../utils/enums'
-import Autocomplete from '@mui/material/Autocomplete'
 import { memoizedSelectArticles } from '../store/newsSelects'
 import { FilterDateField } from './FilterDateField'
 
