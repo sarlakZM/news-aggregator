@@ -3,15 +3,17 @@ import { fetchAndCombineArticles } from '../services/news.service'
 import { ApiResponse, NewsRequestParams } from '../types/api.type'
 
 interface ArticlesState {
-  articles: ApiResponse
-  loading: boolean
-  status: 'idle' | 'loading' | 'succeeded' | 'failed'
-  error: string | null
-  filters: NewsRequestParams
+  articles: ApiResponse,
+  total: number,
+  loading: boolean,
+  status: 'idle' | 'loading' | 'succeeded' | 'failed',
+  error: string | null,
+  filters: NewsRequestParams,
 }
 
 const initialState: ArticlesState = {
   articles: [],
+  total: 0,
   loading: false,
   status: 'idle',
   error: null,
@@ -26,7 +28,6 @@ const initialState: ArticlesState = {
 export const fetchArticlesAsync = createAsyncThunk(
   'articles/fetchArticles',
   async (pass: any, { getState }): Promise<ApiResponse> => {
-    console.info(pass)
     const state = getState() as any
     const params = { ...state.articles.filters }
     const response = await fetchAndCombineArticles(params)
@@ -105,6 +106,7 @@ const articlesSlice = createSlice({
           state.loading = false
           state.status = 'succeeded'
           state.articles = action.payload
+          state.total = state.articles.length
         }
       )
       .addCase(
