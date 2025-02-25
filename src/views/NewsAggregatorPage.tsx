@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import FeedIcon from '@mui/icons-material/Feed'
 import NewspaperIcon from '@mui/icons-material/Newspaper'
@@ -12,7 +12,7 @@ import AddFeedButton from '../components/AddFeedButton'
 import PersonalizedFeeds from '../components/PersonalizedFeedsNavigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { memoizedSelectPreferred } from '../store/newsSelects'
-import { filterArticlesByPreferredFeed } from '../store/newsSlice'
+import { changeFiltersCategory, changeFiltersSource, fetchArticlesAsync, filterArticlesByPreferredFeed } from '../store/newsSlice'
 import { AppDispatch } from '../store/store'
 import { appBranding } from '../utils/app.config'
 
@@ -38,15 +38,39 @@ const NAVIGATION: Navigation = [
 ]
 
 export default function AppProviderLayout() {
+  const [preferredFeed, setPreferredFeed] = useState({ head: '', value: '' });
   const dispatch = useDispatch<AppDispatch>()
   const router = useDemoRouter('/dashboard')
   const { sources, categories, authors } = useSelector(memoizedSelectPreferred)
-  const mainNavigation = [...NAVIGATION]
+  const mainNavigation = [...NAVIGATION];
+  
   const handleClick = (head: string, value: string) => {
-    dispatch(
-      filterArticlesByPreferredFeed({ typeFiterPreferred: head, value: value })
-    )
-  }
+    switch (head) {
+      case 'Sources':
+          dispatch(changeFiltersSource({ source: value }));
+          dispatch(fetchArticlesAsync(''));
+          break;
+      case 'Categories':
+          dispatch(changeFiltersCategory({ category: value }));
+          dispatch(fetchArticlesAsync(''));
+          break;
+      case 'Authors':
+           setPreferredFeed({ head, value });
+          break;
+      default:
+          break;
+    }
+  };
+
+  useEffect(() => {
+      if (preferredFeed.head === 'Authors') {
+          const timer = setTimeout(() => {
+              dispatch(filterArticlesByPreferredFeed({ typeFilterPreferred: preferredFeed.head, value: preferredFeed.value }));
+          }, 500);
+          return () => clearTimeout(timer);
+      }
+  }, [preferredFeed]);
+
   let navigation = PersonalizedFeeds({
     mainNavigation,
     sources,
@@ -55,7 +79,7 @@ export default function AppProviderLayout() {
     handleClick,
   })
   const memoizedNavigation = [
-    ...NAVIGATION,
+    ...mainNavigation,
     ...navigation.sources,
     ...navigation.categories,
     ...navigation.authors,

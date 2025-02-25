@@ -128,25 +128,25 @@ export const matchUrlWithQueryParams = (
 
 export const categories = [
   ...new Set([
-    ...nytApiCategories,
-    ...bbcApiCategories,
     ...guardianApiCategories,
     ...newsApiCategories,
+    ...nytApiCategories,
+    ...bbcApiCategories,
   ]),
 ]
 export const authors = [
   ...new Set([
-    ...nytApiAuthors,
-    ...bbcApiAuthors,
     ...guardianApiAuthors,
     ...newsApiAuthors,
+    ...bbcApiAuthors,
+    ...nytApiAuthors,
   ]),
 ]
 export const sources = [
   ...new Set([
+    ...newsApiSources,
+    ...guardianApiSources,
     ...nytApiSources,
     ...bbcApiSorces,
-    ...guardianApiSources,
-    ...newsApiSources,
   ]),
 ]

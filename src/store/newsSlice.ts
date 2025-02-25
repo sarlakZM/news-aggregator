@@ -79,16 +79,7 @@ const articlesSlice = createSlice({
       return {
         ...state,
         articles: [
-          ...state.articles.filter((article) => {
-            return (
-              (action.payload.typeFiterPreferred == 'Sources' &&
-                article.originalSource == action.payload.value) ||
-              (action.payload.typeFiterPreferred == 'Categories' &&
-                article.category == action.payload.value) ||
-              (action.payload.typeFiterPreferred == 'Authors' &&
-                article.author == action.payload.value)
-            )
-          }),
+          ...state.articles.filter((article) => article.author?.includes(action.payload.value)),
         ],
       }
     }),

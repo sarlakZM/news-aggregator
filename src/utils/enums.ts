@@ -1,8 +1,8 @@
 enum ApiTypesEnum {
   'NewsAPI' = 'newsapi',
-  'BBC News' = 'bbc',
-  'New York Times' = 'nytimes',
   'The Guardian' = 'guardian',
+  'New York Times' = 'nytimes',
+  'BBC News' = 'bbc',
 }
 
 export { ApiTypesEnum }

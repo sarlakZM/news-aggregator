@@ -13,72 +13,48 @@ const CustomNavigation = ({
   [key: string]: any
 }) => {
   const isHead = mainNavigation.find((item: any) => item.title === head)
+    let currentNavigation: any = {};
+    if(!isHead){
+      currentNavigation = createNavigationItem({totalItems: items.length, item: head, isHead: true});
+      currentNavigation.children = items.map( (item: string) => createNavigationItem({head: head, item: item, isHead: false, handleClick}));
+      currentNavigation.action = <Chip label={items.length} color="primary" size="small" />
 
-  let currentNavigation: Navigation = isHead // Update the number of items if the head existed
-    ? [
-        {
-          ...isHead,
-          kind: 'page',
-          action: <Chip label={items.length} color="primary" size="small" />,
-        },
-      ]
-    : //Add the head to navigation
-      [
-        {
-          segment: `${head.toLowerCase().split(' ').join('')}`,
-          title: `${head}`,
-          icon: <FiberNewIcon />,
-          action: <Chip label={items.length} color="primary" size="small" />,
-          children: [],
-          kind: 'page',
-        },
-      ]
+    }else{
+      const existringValuesSet = new Set();
+      currentNavigation =  { ...isHead }
+      currentNavigation.children.forEach((item:any) => existringValuesSet.add(item.title));
+      const uniqueNewValues = items.filter( (item:string) => !existringValuesSet.has(item));
+      currentNavigation.children = [ ...currentNavigation.children, ...uniqueNewValues.map( (item: string) => createNavigationItem({head: head, item: item, isHead: false, handleClick}))]
+      currentNavigation.action = <Chip label={items.length} color="primary" size="small" />
+    }
 
-  const children: any =
-    currentNavigation[0].kind == 'page' && currentNavigation[0].children
-  let childrenTitles: Array<string> = []
-  let notNavigatedItem = []
-  if (children && children.length > 0) {
-    childrenTitles =
-      children &&
-      (children as Navigation).reduce((arr: Array<string>, cur) => {
-        cur.kind === 'page' && (arr = [...arr, cur.title as string])
-        return arr
-      }, [])
 
-    notNavigatedItem = items.filter(
-      (item: string) => !childrenTitles.includes(item)
-    )
-  } else notNavigatedItem = [...items]
 
-  if (notNavigatedItem.length > 0) {
-    const newItemNavigation: Navigation = notNavigatedItem.map(
-      (item: string) => ({
-        segment: `${item.toLowerCase().split(' ').join('')}`,
-        title: `${item}`,
-        icon: <FiberNewIcon />,
-        kind: 'page',
-        action: (
-          <IconButton
-            aria-label={item}
-            color="primary"
-            onClick={() => handleClick(head, item)}
-          >
-            <InfoIcon />
-          </IconButton>
-        ),
-      })
-    )
-
-    currentNavigation[0].kind == 'page' &&
-      currentNavigation[0].children &&
-      (currentNavigation[0].children = [
-        ...currentNavigation[0].children,
-        ...newItemNavigation,
-      ])
-  }
-
-  return currentNavigation
+  return [currentNavigation] as Navigation
 }
 
-export default CustomNavigation
+  const createNavigationItem = ({ totalItems, head, item , isHead, handleClick}: any) =>{
+      const navigationItem: any = {
+                      segment: `${item.toLowerCase().split(' ').join('')}`,
+                      title: `${item}`,
+                      icon: <FiberNewIcon />,
+                      kind: 'page',
+                    }
+        isHead ? ( 
+          navigationItem.children ??= []
+        ) :
+        (
+          navigationItem.action ??= <IconButton
+                aria-label={item}
+                color="primary"
+                onClick={() => handleClick(head, item)}
+              >
+                <InfoIcon />
+            </IconButton>
+    )
+    return navigationItem as Navigation;
+  }
+
+
+
+export default CustomNavigation;
