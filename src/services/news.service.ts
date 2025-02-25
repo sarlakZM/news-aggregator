@@ -38,25 +38,18 @@ const fetchAndCombineArticles = async (
   newsRequestParams: NewsRequestParams
 ) => {
   try {
-    const [newsArticles, bbcArticles, guardianArticles, nytimesArticles] =
-      await Promise.allSettled([
-        fetchNewsAGeneric(newsRequestParams, ApiTypesEnum.NewsAPI),
-        fetchNewsAGeneric(newsRequestParams, ApiTypesEnum['BBC News']),
-        fetchNewsAGeneric(newsRequestParams, ApiTypesEnum['The Guardian']),
-        fetchNewsAGeneric(newsRequestParams, ApiTypesEnum['New York Times']),
-      ])
-
-    const combinedArticles = [
-      ...(newsArticles.status == 'fulfilled' ? newsArticles.value : []),
-      ...(bbcArticles.status == 'fulfilled' ? bbcArticles.value : []),
-      ...(guardianArticles.status == 'fulfilled' ? guardianArticles.value : []),
-      ...(nytimesArticles.status == 'fulfilled' ? nytimesArticles.value : []),
-    ]
+    const apis =  Object.values(ApiTypesEnum)
+    const responses = await Promise.allSettled(apis.map( api => fetchNewsAGeneric(newsRequestParams, api)));
+    const isAllApisHasError = responses.every( api => api.status == 'rejected');
+    if( isAllApisHasError )
+      throw 'Error fetching news articles';
+    const combinedArticles =  responses.reduce( (combined: any, response) =>  {
+      return response.status === 'fulfilled' && (combined = [...combined, ...response.value]) 
+    }, [])
 
     return combinedArticles
   } catch (error) {
-    console.error('Error combining articles:', error)
-    return []
+    throw `Error fetching news articles ${error}`;
   }
 }
 
