@@ -61,43 +61,54 @@ export const processedResponseMaped: ApiResponseTypeMap = {
 
 const matchQueryParams: any = {
   newsapi: (params: NewsRequestParams, apiKey: string) => {
-    let queryParams: string = `language=en&sortBy=publishedAt&pageSize=${PAGE_SIZE}`
-    params?.searchKeyword && (queryParams += `&q=${params.searchKeyword}`)
-    params?.category && (queryParams += `&category=${params.category}`)
-    params?.source &&
-      params?.source != ApiTypesEnum.NewsAPI &&
-      (queryParams += `&source=${params.source ?? 'bbc-news'}`)
-    params?.fromDate && (queryParams += `&from=${params.fromDate}`) //(e.g. 2025-02-21 or 2025-02-21T15:25:12)
-    queryParams += `&apiKey=${apiKey}`
+    const queryParams: any = {
+      apiKey: apiKey,
+      language: 'en',
+      sortBy: 'publishedAt',
+      pageSize: PAGE_SIZE,
+    }
+    params?.searchKeyword && (queryParams.q ??= params.searchKeyword);
+    params?.category && (queryParams.category ??= params.category);
+    params?.source && (queryParams.source ??= params.source) ;
+    params?.fromDate && (queryParams.from  ??= params.fromDate) //(e.g. 2025-02-21 or 2025-02-21T15:25:12)
     return queryParams
   },
   bbc: (params: NewsRequestParams, apiKey: string) => {
-    let queryParams: string = `language=en&sortBy=publishedAt&sources=bbc-news&pageSize=${PAGE_SIZE}`
-    params?.searchKeyword && (queryParams += `&q=${params.searchKeyword}`)
-    // params?.category && ( queryParams += `&category=${ params.category }`);
-    params?.fromDate && (queryParams += `&from=${params.fromDate}`) //(e.g. 2025-02-21 or 2025-02-21T15:25:12)
-    queryParams += `&apiKey=${apiKey}`
+    const queryParams: any = {
+      apiKey: apiKey,
+      language: 'en',
+      sortBy: 'publishedAt',
+      pageSize: PAGE_SIZE,
+      sources: 'bbc-news',
+    }
+    params?.searchKeyword && (queryParams.q ??= params.searchKeyword);
+    // params?.category && (queryParams.category ??= params.category);
+    params?.source && (queryParams.source ??= params.source) ;
+    params?.fromDate && (queryParams.from  ??= params.fromDate) //(e.g. 2025-02-21 or 2025-02-21T15:25:12)
     return queryParams
   },
   nytimes: (params: NewsRequestParams, apiKey: string) => {
-    let queryParams: string = `sort=newest&page=0`
-    params?.searchKeyword && (queryParams += `&q=${params.searchKeyword}`)
-    params?.category &&
-      (queryParams += `&fq=news_desk:(\"${params.category}\") OR sectin_name(\"${params.category}\")`)
-    params?.source &&
-      params?.source != ApiTypesEnum['New York Times'] &&
-      (queryParams += `&fq=source:(\"${params.source}\")`)
-    params?.fromDate &&
-      (queryParams += `&begin_date=${params.fromDate.replace(/-/g, '')}`) //(e.g. 20230101 jan 1 2023 20231231)
-    queryParams += `&api-key=${apiKey}`
+    const queryParams: any = {
+      'api-key': apiKey,
+      sort: 'newest',
+      page: 0,
+    }
+    params?.searchKeyword && (queryParams.q ??= params.searchKeyword);
+    params?.category && (queryParams.fq = `news_desk:(\"${params.category}\") OR sectin_name(\"${params.category}\")`);
+    params?.source && (queryParams.fq ??= params.source) ;
+    params?.fromDate && (queryParams.begin_date  ??= params.fromDate.replace(/-/g, ''))  //(e.g. 20230101 jan 1 2023 20231231)
     return queryParams
   },
   guardian: (params: NewsRequestParams, apiKey: string) => {
-    let queryParams: string = `order-by=newest&show-elements=image&page-size=${PAGE_SIZE}`
-    params?.searchKeyword && (queryParams += `&q=${params.searchKeyword}`)
-    params?.category && (queryParams += `&section=${params.category}`)
-    params?.fromDate && (queryParams += `&from-date=${params.fromDate}`) //(e.g. 2025-02-21)
-    queryParams += `&api-key=${apiKey}`
+    const queryParams: any = {
+      'api-key': apiKey,
+      'order-by': 'newest',
+      'show-elements': 'image',
+      'page-size': PAGE_SIZE,
+    }
+    params?.searchKeyword && (queryParams.q ??= params.searchKeyword);
+    params?.category && (queryParams.section ??= params.category.toLowerCase());
+    params?.fromDate && (queryParams['from-date'] ??= params.fromDate);//(e.g. 2025-02-21)
     return queryParams
   },
 }
@@ -111,7 +122,7 @@ export const matchUrlWithQueryParams = (
     newsRequestParams,
     apiConfig.apiKey
   )
-  const url = `${apiConfig.url.replace(/\/$/g, '')}?${queryParams}`
+  const url = `${apiConfig.url.replace(/\/$/g, '')}?${new URLSearchParams(queryParams).toString()}`
   return url
 }
 
